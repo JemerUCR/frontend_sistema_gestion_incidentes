@@ -1,86 +1,82 @@
-import React, { useState } from 'react';
+import React from 'react';
+import axios from 'axios';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonInput, IonFooter, IonAlert } from '@ionic/react';
 import './Tab1.css';
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonButton,
-  IonAlert
-} from '@ionic/react';
 
-const Tab1 = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
+const LoginPage: React.FC = () => {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [users, setUsers] = React.useState([]);
 
-  const handleLogin = () => {
-    // Aquí iría la lógica de autenticación.
-    if (!email || !password) {
-      setShowAlert(true);
-    } else {
-      console.log("Login exitoso");
+  const handleLogin = async () => {
+    try {
+      // Realizar la solicitud HTTP GET para obtener todos los usuarios
+      const response = await axios.get('http://127.0.0.1:8000/api/usuarios');
+      // Actualizar el estado de los usuarios con los datos recibidos
+      setUsers(response.data);
+      // Mostrar los usuarios en la consola
+      console.log('Usuarios:', response.data);
+    } catch (error) {
+      // Manejar errores
+      console.error('Error al obtener usuarios:', error);
     }
   };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle className='titulo'>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+    
+      <IonPage className='contenido'>
 
-      <IonContent className='contenido'>
-        <div className='centro'>
-          <IonGrid className='elemento'>
-            <IonRow className="ion-justify-content-center">
-              <IonCol size-md="6" size-sm="12">
-                <IonCard>
-                  <IonCardHeader>
-                    <IonCardTitle className='titulo'>Iniciar Sesión</IonCardTitle>
-                  </IonCardHeader>
+        <IonHeader>
+          Jemerson
+        </IonHeader>
+       
+        <IonContent color={""}>
+          <IonToolbar>
+            <IonTitle>Sistema Gestión de Riesgos</IonTitle>
+            <img src="asset/icon/iconPage.png" alt="Icon" />
+          </IonToolbar>
 
-                  <IonCardContent>
-                    <IonItem>
-                      <IonInput type="email" placeholder='Correo Electronico'></IonInput>
-                    </IonItem>
+          <div className="login">
+            <div id="login">
+              <div className="username">
+                <IonInput
+                  placeholder="Usuario"
+                  value={username}
 
-                    <IonItem>
-                      <IonInput type="password" placeholder='Contraseña'></IonInput>
-                    </IonItem>
+                />
+              </div>
+              <div className="password">
+                <IonInput
+                  type="password"
+                  placeholder="Contraseña"
+                  value={password}
 
-                    <IonButton expand="full" onClick={handleLogin}>Ingresar</IonButton>
-                  </IonCardContent>
-                </IonCard>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </div>
+                />
+              </div>
+              <div className="button">
+                <IonButton id="present-alert" onClick={handleLogin}>Ingresar</IonButton>
+                <IonAlert
+                  trigger="present-alert"
+                  header="Mensaje"
+                  message="Mensaje de alerta"
+                  buttons={['Aceptar', 'Salir']}
+                ></IonAlert>
+              </div>
+              <div className="recover">
+                <IonButton href="#">Recuperar Contraseña?</IonButton>
+              </div>
+            </div>
+          </div>
+        </IonContent>
 
-        <IonAlert
-          isOpen={showAlert}
-          onDidDismiss={() => setShowAlert(false)}
-          header={'Login fallido'}
-          message={'Por favor, ingrese un correo electrónico y contraseña válidos'}
-          buttons={['OK']}
-        />
-      </IonContent>
-    </IonPage>
+        <IonFooter><h6>Jemerson Rodriguez</h6>
+        </IonFooter>
+      </IonPage>
+    
+
   );
-
 };
 
-export default Tab1;
+export default LoginPage;
+
 
